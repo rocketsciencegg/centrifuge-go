@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"net/http"
 	"strings"
 	"sync"
@@ -357,9 +358,7 @@ func (c *Client) handleDisconnect(d *disconnect) {
 
 	c.requestsMu.Lock()
 	reqs := make(map[uint32]request, len(c.requests))
-	for uid, req := range c.requests {
-		reqs[uid] = req
-	}
+	maps.Copy(reqs, c.requests)
 	c.requests = make(map[uint32]request)
 	c.requestsMu.Unlock()
 
@@ -1231,16 +1230,17 @@ func (c *Client) resolveConnectFutures(err error) {
 
 func (c *Client) onConnect(fn func(err error)) {
 	c.mu.Lock()
-	if c.status == CONNECTED {
+	switch c.status {
+	case CONNECTED:
 		c.mu.Unlock()
 		fn(nil)
-	} else if c.status == DISCONNECTED {
+	case DISCONNECTED:
 		c.mu.Unlock()
 		fn(ErrClientDisconnected)
-	} else if c.status == CLOSED {
+	case CLOSED:
 		c.mu.Unlock()
 		fn(ErrClientClosed)
-	} else {
+	default:
 		defer c.mu.Unlock()
 		id := c.nextFutureID()
 		fut := newConnectFuture(fn)

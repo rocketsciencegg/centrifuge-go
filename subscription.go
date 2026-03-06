@@ -284,11 +284,12 @@ func (s *Subscription) PresenceStats() (PresenceStatsResult, error) {
 func (s *Subscription) onSubscribe(fn func(err error)) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.status == SUBSCRIBED {
+	switch s.status {
+	case SUBSCRIBED:
 		go fn(nil)
-	} else if s.status == SUBERROR {
+	case SUBERROR:
 		go fn(s.err)
-	} else {
+	default:
 		id := s.nextFutureID()
 		fut := newSubFuture(fn)
 		s.subFutures[id] = fut
@@ -629,7 +630,7 @@ func (s *Subscription) processRecover(res *protocol.SubscribeResult) {
 	s.mu.Unlock()
 	if len(res.Publications) > 0 {
 		pubs := res.Publications
-		for i := 0; i < len(pubs); i++ {
+		for i := range pubs {
 			s.handlePublication(res.Publications[i])
 		}
 	} else {
