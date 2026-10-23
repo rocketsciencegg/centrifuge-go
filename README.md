@@ -2,6 +2,13 @@
 
 Websocket client for [Centrifuge](https://github.com/centrifugal/centrifuge) library and [Centrifugo](https://github.com/centrifugal/centrifugo) server.
 
+The `v0.8.x` branch preserves protocol-v1 compatibility for
+[mp-unity-sdk](https://github.com/rocketsciencegg/mp-unity-sdk). Keep the
+`github.com/centrifugal/protocol` replacement pinned to
+`github.com/rocketsciencegg/centrifuge-protocol v0.9.2` in both modules.
+The modern upstream protocol module no longer supports the v1
+`method`/`params` and `result` envelopes.
+
 There is no v1 release of this library yet – API still evolves. At the moment patch version updates only contain backwards compatible changes, minor version updates can have backwards incompatible API changes.
 
 ## Feature matrix
@@ -48,7 +55,10 @@ There is no v1 release of this library yet – API still evolves. At the moment 
 First run Centrifugo instance:
 
 ```
-docker run -d -p 8000:8000 centrifugo/centrifugo:latest centrifugo --client_insecure
+docker run -d -p 8000:8000 centrifugo/centrifugo:v3 centrifugo --client_insecure
 ```
 
-Then run `go test`
+Then run `GOMAXPROCS=2 go test -race -p 2 ./...`.
+
+The Unity wire-envelope regressions can also run without a server using
+`go test -run '^TestNew(CommandEncoder|ReplyDecoder|ResultDecoder)$' ./...`.

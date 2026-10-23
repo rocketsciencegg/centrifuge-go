@@ -5,7 +5,7 @@ go 1.26.0
 replace github.com/centrifugal/centrifuge-go => ../
 
 require (
-	github.com/centrifugal/centrifuge-go v0.3.0
+	github.com/centrifugal/centrifuge-go v0.8.5
 	github.com/golang-jwt/jwt/v5 v5.3.1
 )
 
