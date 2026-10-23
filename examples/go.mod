@@ -2,8 +2,6 @@ module github.com/centrifugal/centrifuge-go/examples
 
 go 1.26.0
 
-replace github.com/centrifugal/centrifuge-go => ../
-
 require (
 	github.com/centrifugal/centrifuge-go v0.8.5
 	github.com/golang-jwt/jwt/v5 v5.3.1
@@ -22,4 +20,7 @@ require (
 	google.golang.org/protobuf v1.36.12 // indirect
 )
 
-replace github.com/centrifugal/protocol => github.com/rocketsciencegg/centrifuge-protocol v0.9.2
+replace (
+	github.com/centrifugal/centrifuge-go => ../
+	github.com/centrifugal/protocol => github.com/rocketsciencegg/centrifuge-protocol v0.9.2
+)

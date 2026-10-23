@@ -58,7 +58,7 @@ First run Centrifugo instance:
 docker run -d -p 8000:8000 centrifugo/centrifugo:v3 centrifugo --client_insecure
 ```
 
-Then run `GOMAXPROCS=2 go test -race -p 2 ./...`.
+Then run `go test -race ./...`.
 
 The Unity wire-envelope regressions can also run without a server using
 `go test -run '^TestNew(CommandEncoder|ReplyDecoder|ResultDecoder)$' ./...`.
