@@ -1,11 +1,22 @@
 name: build
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+  merge_group:
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 jobs:
   golangci:
     name: Lint
     runs-on: ubuntu-latest
-    # Prevent duplicate builds on internal PRs.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -19,8 +30,6 @@ jobs:
   build:
     name: Test with Go ${{ matrix.go-version }}
     runs-on: ubuntu-latest
-    # Prevent duplicate builds on internal PRs.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     strategy:
       matrix:
         go-version: ["oldstable", "stable"]
