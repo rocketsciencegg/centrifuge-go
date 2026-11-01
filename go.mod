@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/centrifugal/protocol v0.9.1
 	github.com/gorilla/websocket v1.5.3
-	github.com/jpillora/backoff v1.0.0
+	github.com/jpillora/backoff v1.1.0
 	github.com/stretchr/testify v1.12.1
 )
 
